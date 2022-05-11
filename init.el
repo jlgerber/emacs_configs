@@ -1,4 +1,9 @@
-
+;; From a video series on youtube
+;; github act
+;; https://github.com/SystemCrafters
+;;
+;; example init.el here:
+;;https://github.com/daviwil/emacs-from-scratch/blob/master/Emacs.org 
 ;-----------------------
 ;       init.el        ;
 ;----------------------;
@@ -226,3 +231,129 @@
   ([remap describe-variable] . counsel-describe-variable)
   ([remap describe-key] . helful-key))
 
+;;-----------------------------------------;;
+;;   Episode 3 - Keybindings and Evil      ;;
+;;-----------------------------------------;;
+;;https://www.youtube.com/watch?v=xaZMwNELaJY&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ&index=3
+
+;; emacs has a number of functions that you can use for keybindings
+;; global-set-key
+;; Example
+;;-----------------------------------------
+;; map C-M-j to an enhansed buffer switcher based on counsel
+;; (global-set-key (kbd "C-M-j") 'counsel-switch-buffer)
+
+;; define-key - define a key binding in a particular mode
+;; Example
+;; ----------------------------------------------
+;; (define-key emacs-list-mode-map (kbd "C-x M-t") 'counsel-load-theme)
+;;
+;;-------------------------------------;;
+;;  general.el keybinding management   ;;
+;;-------------------------------------;;
+;; In general we will not use these directly. Instead, we will use general.el
+;; https://github.com/noctuid/general.el
+(use-package general
+  :config
+  (general-evil-setup t)
+  ;; define a leader key 
+  (general-create-definer rune/leader-keys
+     :keymaps '(normal insert visual emacs)
+     :prefix "SPC"
+     :global-prefix "C-SPC")
+  
+  (rune/leader-keys
+   "t" '(:ignore t :which-key "toggles")
+   "tt" '(counsel-load-theme :which-key "choose theme")))
+
+;;-----------------;;
+;;   evil mode     ;;
+;;-----------------;;
+;; use vim keybindings
+;; https://github.com/emacs-evil/evil
+(defun rune/evil-hook ()
+  (dolist (mode '(custom-mode
+		  eshell-mode
+		  git-rebase-mode
+		  erc-mode
+		  circe-server-mode
+		  circe-chat-mode
+		  circe-query-mode
+		  sauron-mode
+		  term-mode))
+    (add-to-list 'evil-emacs-state-modes mode)))
+
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  ;:hook (evil-mode . rune/evil-hook)
+  :config
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+
+;; evil-collection
+;; setup for evil modes that "just work"
+(use-package evil-collection
+  :after evil
+  :config
+  (evil-collection-init))
+;;
+;; EVIL MODE
+;;
+;; You can always leave evil mode using C-z
+;(evil-mode 1)
+
+;;-----------------
+;;     hydra
+;;-----------------
+;; key binding combinator
+;; https://github.com/abo-abo/hydra
+(use-package hydra
+  :defer t)
+;; define a hydra to scale text up and down
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
+
+;; access via C-SPC t s
+;; define a hydra to scale text up and do
+(rune/leader-keys
+ "ts" '(hydra-text-scale/body :which-key "scale text"))
+
+;;-----------------------------------
+;; Episode 4 - Projectile and Magit
+;;-----------------------------------
+;; url:
+;; https://www.youtube.com/watch?v=INTu30BHZGk&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ&index=4
+
+;;-----------------
+;; Projectile
+;;-----------------
+;; a project management package
+;;https://github.com/bbatsov/projectile
+;; WE Bind C-c p to show the list of projectile hotkeys
+;; Just hit C-c p and ivy will show us all of the potential commands
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  (when (file-directory-p "~/src")
+    (setq projectile-project-search-path '("~/src")))
+  (setq projectile-switch-project-action #'projectile-dired))
