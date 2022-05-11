@@ -357,3 +357,10 @@
   (when (file-directory-p "~/src")
     (setq projectile-project-search-path '("~/src")))
   (setq projectile-switch-project-action #'projectile-dired))
+
+;; add additional functionality when searching
+;; usage:
+;; C-c p f
+;; M-o
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
