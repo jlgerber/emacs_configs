@@ -15,7 +15,15 @@
 
 (set-fringe-mode 10) ;; provide some breathing room
 
+(column-number-mode)
 (global-display-line-numbers-mode 1)
+
+;; disable line numbers for some modes
+(dolist (mode '(eshell-mode-hook
+		term-mode-hook
+		shell-mode-hook
+		org-mode-hook))
+  (add-hook mode(lambda () (display-line-numbers-mode 0))))
 
 ;;---------------------
 ;;       themes
@@ -128,6 +136,93 @@
 
 
 ;; customize the mode line
+;; doom modeline is awesome
+;; https://github.com/seagle0128/doom-modeline
+;; to run you need to M-x all-the-icons-install-fonts
+;; the docs have a bunch of configuration options
 (use-package doom-modeline
   :ensure t
-  :init (doom-modeline-mode 1))
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 10)))
+  
+
+;; Whether display the icon for `major-mode'. It respects `doom-modeline-icon'.
+(setq doom-modeline-major-mode-icon t)
+
+;; Whether display the colorful icon for `major-mode'.
+;; It respects `all-the-icons-color-icons'.
+(setq doom-modeline-major-mode-color-icon t)
+
+;; Whether display the icon for the buffer state. It respects `doom-modeline-icon'.
+(setq doom-modeline-buffer-state-icon t)
+
+;; Whether display the modification icon for the buffer.
+;; It respects `doom-modeline-icon' and `doom-modeline-buffer-state-icon'.
+(setq doom-modeline-buffer-modification-icon t)
+
+;; Whether display the buffer name.
+(setq doom-modeline-buffer-name t)
+
+;; Whether display the minor modes in the mode-line.
+(setq doom-modeline-minor-modes t) ;; was nil
+
+;; Whether display the `lsp' state. Non-nil to display in the mode-line.
+(setq doom-modeline-lsp t)
+
+;; Whether display the environment version.
+(setq doom-modeline-env-version t)
+
+;;----------------------------------------------
+;; Emacs from scratch #2 video - Adding Helpful UI Improvements
+;;https://www.youtube.com/watch?v=IspAZtNTslY&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ&index=2
+;;----------------------------------------------
+
+;;-----------------------
+;; rainbow delimiters
+;;-----------------------
+;; color the delimiters in prog-mode (any programming mode)
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+;; adds descriptions of key completions for hotkeys
+;; eg if you type C-h it will show a minibuffer full of choices
+;; or C-x for instance
+;; you can set the delay so that the extra help doesn't show up
+;; before a set amount of time
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
+
+;; ivy-rich
+;; in addition to ivy
+;; gives you extra info for a few of the built in commands
+;; https://github.com/Yevgnen/ivy-rich
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+;;(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+	 ("C-x b" . counsel-ibuffer)
+	 ("C-x C-f" . counsel-find-file)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history))
+  :config
+  (setq ivy-initial-inputs-alist nil)) ;; Don't start searches with ^
+
+
+;; helpful
+;; https://github.com/Wilfred/helpful
+;; augment's emac's help
+(use-package helpful
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helful-key))
+
