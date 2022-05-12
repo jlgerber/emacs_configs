@@ -306,7 +306,7 @@
 ;; evil-collection
 ;; setup for evil modes that "just work"
 (use-package evil-collection
-  :after evil
+  :after (evil magit)
   :config
   (evil-collection-init))
 ;;
@@ -364,3 +364,15 @@
 ;; M-o
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
+
+
+;;-----------------------
+;; MAGIT
+
+(use-package magit
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+;; evil-magit removed from melpa. now part of evil-collection
+;;(use-package evil-magit
+;;  :after magit)
