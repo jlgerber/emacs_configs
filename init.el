@@ -14,7 +14,7 @@
       visible-bell t) ; Flash when the bell rings
 
 ;; TUrn off some unneeded ui elements
-(menu-bar-mode -1)
+(menu-bar-mode 1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
