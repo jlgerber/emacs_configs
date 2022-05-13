@@ -1,0 +1,1087 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-05-13 Fri 10:23 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>&lrm;</title>
+<meta name="author" content="Jonathan Gerber" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"/>
+<link rel="stylesheet" type="text/css" href="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"></script>
+<script type="text/javascript" src="https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js"></script>
+</head>
+<body>
+<div id="content" class="content">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org62f128b">Literate Programming</a>
+<ul>
+<li>
+<ul>
+<li><a href="#orgf3956d0">Converting to HTML</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org11d05e9">Basic Configuration</a></li>
+<li><a href="#orgd909faf">Theme-ing</a></li>
+<li><a href="#org408b940">Recentf Mode</a></li>
+<li><a href="#org2fe7600">Minibuffer Prompt History</a></li>
+<li><a href="#org0b49b23">Go to the Last Place that you Visited When Reopening a File with Save Place Mode</a></li>
+<li><a href="#orge9d53b3">Don't Show Pop Up Dialog Boxes with Buttons. Use Text Instead</a></li>
+<li><a href="#orgd402555">Reload Files if They Change On Disk</a></li>
+<li><a href="#org7c521fd">Set The Font</a></li>
+<li><a href="#org5653724">Setup the Package Manager</a>
+<ul>
+<li><a href="#orgaa336a6">Require package</a></li>
+<li><a href="#org62f0764">Configure Package Sources</a></li>
+<li><a href="#orgc3f010e">Initialize Package Module and Install use-package module</a></li>
+</ul>
+</li>
+<li><a href="#org56b578f">Load Package which Can Show Window that Display's Typed Commands</a></li>
+<li><a href="#org5b423ed">Load and Set Up Ivy and Counsel</a>
+<ul>
+<li><a href="#org410d38e">Load counsel</a></li>
+<li><a href="#org62f8c24">Load and Configure Ivy</a></li>
+</ul>
+</li>
+<li><a href="#org6fcf231">Configure the Mode Line at the Bottom of Emacs</a>
+<ul>
+<li><a href="#org41f7498">Load doom modeline package</a></li>
+<li><a href="#org0c0ee35">Configure Doom Modeline</a></li>
+</ul>
+</li>
+<li><a href="#orga8f2b85">Color Pairs of Delimiters using rainbow-delimiters package</a></li>
+<li><a href="#org48903fd">Add Description of Key Completions for Hotkeys using <i>which-key</i> Package</a></li>
+<li><a href="#orge25ba31">Get Even More Information from Ivy with <i>ivy-rich</i> Package</a></li>
+<li><a href="#org33f3c11">Setup Counsel</a></li>
+<li><a href="#orgb287a8e">Install and setup <i>helpful</i> - augmenting the emacs help system</a></li>
+<li><a href="#orgdb81b02">Install <i>general</i> to Set Up Keybindings</a></li>
+<li><a href="#org98500e5">Evil Mode - Use VI Keybindings</a></li>
+<li><a href="#org05750f4">Key binding combinator with <i>hydra</i></a></li>
+<li><a href="#orgfaf751c">Projectile - Project Management</a></li>
+<li><a href="#orgbc716d9">Magit - Git Awesomeness</a></li>
+<li><a href="#orgcea479e">Markdown Mode</a></li>
+<li><a href="#orgaeb4874">Org Mode</a>
+<ul>
+<li><a href="#orgc91ff19">Basic Setup</a></li>
+<li><a href="#orgc9928b9">Org Bullets - Fix those Nasty Org Bullets</a></li>
+<li><a href="#org2423ff4">Draw List with Dots</a></li>
+<li><a href="#org5435608">Scale the Headings</a></li>
+<li><a href="#orged945ae">Add Space to the Sides So that We Aren't Pressing Up Against the Left Margin</a></li>
+<li><a href="#org4f8a6aa">Org Babel - Provide Lanaguage Highlighting in Src Blocks (and execution)</a></li>
+<li><a href="#org4284cbe">Add Src Block Templating</a></li>
+<li><a href="#org79aeb0b">Set the Background Color of Blocks So That They are 3% Darker</a></li>
+<li><a href="#orgf10f392">Auto Tangle Configuration FIles</a></li>
+</ul>
+</li>
+<li><a href="#orgadab9e6">For the Future</a>
+<ul>
+<li><a href="#orga2e429f">Swankify the Checkboxes</a></li>
+<li><a href="#org19c7a29">Automatically Generate an Org Mode Table of Contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+#+title Init.el Configuration
+</p>
+
+<div id="outline-container-org62f128b" class="outline-2">
+<h2 id="org62f128b">Literate Programming</h2>
+<div class="outline-text-2" id="text-org62f128b">
+<ul class="org-ul">
+<li>You can extract the blocks of code into a file as configured via the PROPERTY above, using the following command</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-shell">
+M-x org-babel-tangle
+</pre>
+</div>
+
+<p>
+I was inspired by the folks over at the <i>system crafters</i> youtube channel. They have a literate config here:
+</p>
+
+<p>
+<a href="https://github.com/daviwil/dotfiles/blob/master/Emacs.org">https://github.com/daviwil/dotfiles/blob/master/Emacs.org</a>
+</p>
+
+<p>
+If you want to be more targeted, you can set the target on a per code block basis. Following the name of the language, you add a <i>:tangle</i> and then the name of the <i>output file</i>.
+</p>
+</div>
+
+<div id="outline-container-orgf3956d0" class="outline-4">
+<h4 id="orgf3956d0">Converting to HTML</h4>
+<div class="outline-text-4" id="text-orgf3956d0">
+<p>
+Here is a good youtube video on the subject: <a href="https://www.youtube.com/watch?v=8Gw4Y2EpcOY">https://www.youtube.com/watch?v=8Gw4Y2EpcOY</a>
+</p>
+</div>
+
+<ul class="org-ul">
+<li><a id="org69a10be"></a>Use M-x org-export-dispatch<br />
+<div class="outline-text-5" id="text-org69a10be">
+<p>
+Use h o
+</p>
+</div>
+</li>
+<li><a id="orgd6b6388"></a>Basic Customization - turning off numbers and the toc<br />
+<div class="outline-text-5" id="text-orgd6b6388">
+<p>
+Go to the top of your org file and add an options line prefixes with a hash and a +
+OPTIONS: toc:nil num:nil
+</p>
+</div>
+</li>
+<li><a id="org8141352"></a>Exporting using a theme<br />
+<div class="outline-text-5" id="text-org8141352">
+<p>
+fniessen has a good project for exporting to a styled html file. The github project is here:
+</p>
+
+<p>
+<a href="https://github.com/fniessen/org-html-themes">https://github.com/fniessen/org-html-themes</a>
+</p>
+
+<p>
+Go to the top of your file and add a SETUPFILE (prefixed with hash and +)
+SETUPFILE: <a href="https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup">https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup</a>
+</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org11d05e9" class="outline-2">
+<h2 id="org11d05e9">Basic Configuration</h2>
+<div class="outline-text-2" id="text-org11d05e9">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; you can setq multiple variables in the same setq function call
+(setq inhibit-startup-message t ;; get rid of welcome screen  
+      visible-bell t)           ;; Flash when the bell rings
+
+;; Turn off some unneeded ui elements
+(menu-bar-mode 1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+(set-fringe-mode 10)             ;; provide some breathing room
+
+(column-number-mode)
+(global-display-line-numbers-mode 1)
+
+;; disable line numbers for some modes
+(dolist (mode '(eshell-mode-hook
+		term-mode-hook
+		shell-mode-hook
+		org-mode-hook))
+  (add-hook mode(lambda () (display-line-numbers-mode 0))))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd909faf" class="outline-2">
+<h2 id="orgd909faf">Theme-ing</h2>
+<div class="outline-text-2" id="text-orgd909faf">
+<p>
+You can specify a theme in your config using the <i>load-theme</i> function. We are loading <i>modus vivendi</i>
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; Installed Badger theme. it looks good in org mode
+(load-theme 'badger t)
+
+;; Load the Modus Vivendi dark theme
+;; There is a good doc on customizing modus-vivendi. check it out. prot.
+;;(load-theme 'modus-vivendi t)
+
+;; Alternate theme 
+;; (load-theme 'deeper-blue 1) 
+
+</pre>
+</div>
+
+<p>
+Modus vivendi has a bunch of configuration documentation
+</p>
+
+<p>
+<a href="https://protesilaos.com/emacs/modus-themes">https://protesilaos.com/emacs/modus-themes</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org408b940" class="outline-2">
+<h2 id="org408b940">Recentf Mode</h2>
+<div class="outline-text-2" id="text-org408b940">
+<p>
+<i>recentf</i> is a minor mode that builds a list of recently opened files. This list is automatically saved across sessions on existing Emacs. You can access this list through the command line menu.
+</p>
+
+<p>
+To enable, put the following in your config
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(recentf-mode 1) 
+(setq recentf-max-menu-items 25)
+(setq recentf-max-saved-items 25)
+
+;; To manually set a hotkey
+;;(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+
+;; Otherwise, use
+;;    M-x recentf-open-files
+
+</pre>
+</div>
+
+<p>
+You can find out all about <i>recentf</i> mode here: <a href="https://www.emacswiki.org/emacs/RecentFiles">https://www.emacswiki.org/emacs/RecentFiles</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2fe7600" class="outline-2">
+<h2 id="org2fe7600">Minibuffer Prompt History</h2>
+<div class="outline-text-2" id="text-org2fe7600">
+<p>
+You can tweak your minibuffer history, setting a limit to the history.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; remembering minibuffer prompt history
+(setq history-length 25)
+
+;; turn on savehist mode
+(savehist-mode 1)
+;; now you can use
+;;   M-n (next-history-element)
+;;   M-p (previous-history-element)
+
+</pre>
+</div>
+
+<p>
+You can find out more about the Minibuffer History in the manual here: <a href="https://www.gnu.org/software/emacs/manual/html_node/emacs/Minibuffer-History.html">https://www.gnu.org/software/emacs/manual/html_node/emacs/Minibuffer-History.html</a>
+</p>
+
+<p>
+Additionally, you can read up on it on the wiki here: <a href="https://www.emacswiki.org/emacs/MinibufferHistory">https://www.emacswiki.org/emacs/MinibufferHistory</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org0b49b23" class="outline-2">
+<h2 id="org0b49b23">Go to the Last Place that you Visited When Reopening a File with Save Place Mode</h2>
+<div class="outline-text-2" id="text-org0b49b23">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; save place mode
+;; remembering the last place you visited in a file
+(save-place-mode 1)
+
+</pre>
+</div>
+
+<p>
+Read about it on the wiki here: <a href="https://www.emacswiki.org/emacs/SavePlace">https://www.emacswiki.org/emacs/SavePlace</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge9d53b3" class="outline-2">
+<h2 id="orge9d53b3">Don't Show Pop Up Dialog Boxes with Buttons. Use Text Instead</h2>
+<div class="outline-text-2" id="text-orge9d53b3">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; dont show pop up UI dialg-boxes with buttons. keep things text oriented
+(setq use-dialog-box nil)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd402555" class="outline-2">
+<h2 id="orgd402555">Reload Files if They Change On Disk</h2>
+<div class="outline-text-2" id="text-orgd402555">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; pick up changes on disk. (like if you use git to update data on disk)
+(global-auto-revert-mode 1)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org7c521fd" class="outline-2">
+<h2 id="org7c521fd">Set The Font</h2>
+<div class="outline-text-2" id="text-org7c521fd">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; set font per system
+(pcase system-type
+  ('gnu/linux (set-face-attribute 'default nil :font "SpaceMono Nerd Font Mono" :height 120))
+  ( 'darwin (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 120)))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5653724" class="outline-2">
+<h2 id="org5653724">Setup the Package Manager</h2>
+<div class="outline-text-2" id="text-org5653724">
+<p>
+The wiki has a good writeup on configuring the package manager and installing packages here:
+</p>
+
+<p>
+<a href="https://www.emacswiki.org/emacs/InstallingPackages">https://www.emacswiki.org/emacs/InstallingPackages</a>
+</p>
+</div>
+
+<div id="outline-container-orgaa336a6" class="outline-3">
+<h3 id="orgaa336a6">Require package</h3>
+<div class="outline-text-3" id="text-orgaa336a6">
+<p>
+Emacs has a package system, much like many modern languages. To set it up, we need to require the <i>package</i> package
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(require 'package)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org62f0764" class="outline-3">
+<h3 id="org62f0764">Configure Package Sources</h3>
+<div class="outline-text-3" id="text-org62f0764">
+<p>
+By default, emacs ships pointing at GnuELPA. However, we need to add a couple of additional repos, using the <i>add-to-list</i> function
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc3f010e" class="outline-3">
+<h3 id="orgc3f010e">Initialize Package Module and Install use-package module</h3>
+<div class="outline-text-3" id="text-orgc3f010e">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(package-initialize)
+
+;; remember to run M-x package-refresh-contents
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; Initialize use-package
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+(require 'use-package)
+
+;; always load packages if they don't exist from the package repo(s)
+(setq use-package-always-ensure t)
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org56b578f" class="outline-2">
+<h2 id="org56b578f">Load Package which Can Show Window that Display's Typed Commands</h2>
+<div class="outline-text-2" id="text-org56b578f">
+<p>
+<b>Usage:</b>
+</p>
+<ul class="org-ul">
+<li>To turn on the command log buffer: <b>M-x command-log-buffer</b></li>
+<li>To Show the command buffer: <b>clm/toggle-command-log-buffer</b></li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; show window of commands
+(use-package command-log-mode)
+
+;; to turn on the command log buffer
+;; M-x command-log-buffer
+;; to show the command log buffer
+;; clm/toggle-command-log-buffer
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5b423ed" class="outline-2">
+<h2 id="org5b423ed">Load and Set Up Ivy and Counsel</h2>
+<div class="outline-text-2" id="text-org5b423ed">
+</div>
+<div id="outline-container-org410d38e" class="outline-3">
+<h3 id="org410d38e">Load counsel</h3>
+<div class="outline-text-3" id="text-org410d38e">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">(use-package counsel)
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org62f8c24" class="outline-3">
+<h3 id="org62f8c24">Load and Configure Ivy</h3>
+<div class="outline-text-3" id="text-org62f8c24">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(use-package ivy
+  :diminish
+  :bind (("C-s" . swiper)
+	 :map ivy-minibuffer-map
+	 ("TAB" . ivy-alt-done)
+	 ("C-f" . ivy-alt-done)
+	 ("C-l" . ivy-alt-done)
+	 ("C-j" . ivy-next-line)
+	 ("C-k" . ivy-previous-line)
+	 :map ivy-switch-buffer-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-l" . ivy-done)
+	 ("C-d" . ivy-switch-buffer-kill)
+	 :map ivy-reverse-i-search-map
+	 ("C-k" . ivy-previous-line)
+	 ("C-d" . ivy-reverse-i-search-kill))
+  :init
+  (ivy-mode 1)
+  :config
+  (setq ivy-use-virtual-buffers t)
+  (setq ivy-wrap t)
+  (setq ivy-count-format "(%d/%d) ")
+  (setq enable-recursive-minibuffers t)
+
+  ;; Use different regex strategies per completion command
+  (push '(completion-at-point . ivy--regex-fuzzy) ivy-re-builders-alist) ;; This doesn't seem to work...
+  (push '(swiper . ivy--regex-ignore-order) ivy-re-builders-alist)
+  (push '(counsel-M-x . ivy--regex-ignore-order) ivy-re-builders-alist)
+
+  ;; Set minibuffer height for different commands
+  (setf (alist-get 'counsel-projectile-ag ivy-height-alist) 15)
+  (setf (alist-get 'counsel-projectile-rg ivy-height-alist) 15)
+  (setf (alist-get 'swiper ivy-height-alist) 15)
+  (setf (alist-get 'counsel-switch-buffer ivy-height-alist) 7))
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org6fcf231" class="outline-2">
+<h2 id="org6fcf231">Configure the Mode Line at the Bottom of Emacs</h2>
+<div class="outline-text-2" id="text-org6fcf231">
+<p>
+Doom Modeline makes the bottom modeline modern looking. It adds colors and icons and just plain goodness.
+</p>
+
+<p>
+In order to take full advantage of doom modeline, you need to install icon fonts. To do so you type the following command once:
+</p>
+
+<p>
+M-x all-the-icons-install-fonts
+</p>
+
+<p>
+The docs are quite good. They have a bunch of configuration options. And they can be found here:
+</p>
+
+<p>
+<a href="https://github.com/seagle0128/doom-modeline%20">https://github.com/seagle0128/doom-modeline%20</a>
+</p>
+</div>
+<div id="outline-container-org41f7498" class="outline-3">
+<h3 id="org41f7498">Load doom modeline package</h3>
+<div class="outline-text-3" id="text-org41f7498">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; customize the mode line
+;; doom modeline is awesome
+;; https://github.com/seagle0128/doom-modeline
+;; to run you need to M-x all-the-icons-install-fonts
+;; the docs have a bunch of configuration options
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1)
+  :custom ((doom-modeline-height 10)))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org0c0ee35" class="outline-3">
+<h3 id="org0c0ee35">Configure Doom Modeline</h3>
+<div class="outline-text-3" id="text-org0c0ee35">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; Whether display the icon for `major-mode'. It respects `doom-modeline-icon'.
+(setq doom-modeline-major-mode-icon t)
+
+;; Whether display the colorful icon for `major-mode'.
+;; It respects `all-the-icons-color-icons'.
+(setq doom-modeline-major-mode-color-icon t)
+
+;; Whether display the icon for the buffer state. It respects `doom-modeline-icon'.
+(setq doom-modeline-buffer-state-icon t)
+
+;; Whether display the modification icon for the buffer.
+;; It respects `doom-modeline-icon' and `doom-modeline-buffer-state-icon'.
+(setq doom-modeline-buffer-modification-icon t)
+
+;; Whether display the buffer name.
+(setq doom-modeline-buffer-name t)
+
+;; Whether display the minor modes in the mode-line.
+(setq doom-modeline-minor-modes t) ;; was nil
+
+;; Whether display the `lsp' state. Non-nil to display in the mode-line.
+(setq doom-modeline-lsp t)
+
+;; Whether display the environment version.
+(setq doom-modeline-env-version t)
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga8f2b85" class="outline-2">
+<h2 id="orga8f2b85">Color Pairs of Delimiters using rainbow-delimiters package</h2>
+<div class="outline-text-2" id="text-orga8f2b85">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; color the delimiters in prog-mode (any programming mode)
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org48903fd" class="outline-2">
+<h2 id="org48903fd">Add Description of Key Completions for Hotkeys using <i>which-key</i> Package</h2>
+<div class="outline-text-2" id="text-org48903fd">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; adds descriptions of key completions for hotkeys
+;; eg if you type C-h it will show a minibuffer full of choices
+;; or C-x for instance
+;; you can set the delay so that the extra help doesn't show up
+;; before a set amount of time
+(use-package which-key
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge25ba31" class="outline-2">
+<h2 id="orge25ba31">Get Even More Information from Ivy with <i>ivy-rich</i> Package</h2>
+<div class="outline-text-2" id="text-orge25ba31">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; ivy-rich
+;; in addition to ivy
+;; gives you extra info for a few of the built in commands
+;; https://github.com/Yevgnen/ivy-rich
+(use-package ivy-rich
+  :init
+  (ivy-rich-mode 1))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org33f3c11" class="outline-2">
+<h2 id="org33f3c11">Setup Counsel</h2>
+<div class="outline-text-2" id="text-org33f3c11">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;;(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+	 ("C-x b" . counsel-ibuffer)
+	 ("C-x C-f" . counsel-find-file)
+	 :map minibuffer-local-map
+	 ("C-r" . 'counsel-minibuffer-history))
+  :config
+  (setq ivy-initial-inputs-alist nil)) ;; Don't start searches with ^
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb287a8e" class="outline-2">
+<h2 id="orgb287a8e">Install and setup <i>helpful</i> - augmenting the emacs help system</h2>
+<div class="outline-text-2" id="text-orgb287a8e">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; helpful
+;; https://github.com/Wilfred/helpful
+;; augment's emac's help
+(use-package helpful
+  :custom
+  (counsel-describe-function-function #'helpful-callable)
+  (counsel-describe-variable-function #'helpful-variable)
+  :bind
+  ([remap describe-function] . counsel-describe-function)
+  ([remap describe-command] . helpful-command)
+  ([remap describe-variable] . counsel-describe-variable)
+  ([remap describe-key] . helful-key))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgdb81b02" class="outline-2">
+<h2 id="orgdb81b02">Install <i>general</i> to Set Up Keybindings</h2>
+<div class="outline-text-2" id="text-orgdb81b02">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(use-package general
+  :config
+  (general-evil-setup t)
+  ;; define a leader key 
+  (general-create-definer rune/leader-keys
+     :keymaps '(normal insert visual emacs)
+     :prefix "SPC"
+     :global-prefix "C-SPC")
+
+  (rune/leader-keys
+   "t" '(:ignore t :which-key "toggles")
+   "tt" '(counsel-load-theme :which-key "choose theme")))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org98500e5" class="outline-2">
+<h2 id="org98500e5">Evil Mode - Use VI Keybindings</h2>
+<div class="outline-text-2" id="text-org98500e5">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; use vim keybindings
+;; https://github.com/emacs-evil/evil
+(defun rune/evil-hook ()
+  (dolist (mode '(custom-mode
+		  eshell-mode
+		  git-rebase-mode
+		  erc-mode
+		  circe-server-mode
+		  circe-chat-mode
+		  circe-query-mode
+		  sauron-mode
+		  term-mode))
+    (add-to-list 'evil-emacs-state-modes mode)))
+
+(use-package evil
+  :init
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-i-jump nil)
+  ;:hook (evil-mode . rune/evil-hook)
+  :config
+  (evil-mode 1)
+  (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+  (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+  ;; use visual line motions even outside of visual-line-mode buffers
+  (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+  (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+  (evil-set-initial-state 'messages-buffer-mode 'normal)
+  (evil-set-initial-state 'dashboard-mode 'normal))
+
+
+;; evil-collection
+;; setup for evil modes that "just work"
+(use-package evil-collection
+  :after (evil magit)
+  :config
+  (evil-collection-init))
+;;
+;; EVIL MODE
+;;
+;; You can always leave evil mode using C-z
+;(evil-mode 1)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org05750f4" class="outline-2">
+<h2 id="org05750f4">Key binding combinator with <i>hydra</i></h2>
+<div class="outline-text-2" id="text-org05750f4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;;-----------------
+;;     hydra
+;;-----------------
+;; key binding combinator
+;; https://github.com/abo-abo/hydra
+(use-package hydra
+  :defer t)
+;; define a hydra to scale text up and down
+(defhydra hydra-text-scale (:timeout 4)
+  "scale text"
+  ("j" text-scale-increase "in")
+  ("k" text-scale-decrease "out")
+  ("f" nil "finished" :exit t))
+
+;; access via C-SPC t s
+;; define a hydra to scale text up and do
+(rune/leader-keys
+ "ts" '(hydra-text-scale/body :which-key "scale text"))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgfaf751c" class="outline-2">
+<h2 id="orgfaf751c">Projectile - Project Management</h2>
+<div class="outline-text-2" id="text-orgfaf751c">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; url:
+;; https://www.youtube.com/watch?v=INTu30BHZGk&amp;list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ&amp;index=4
+
+;;-----------------
+;; Projectile
+;;-----------------
+;; a project management package
+;;https://github.com/bbatsov/projectile
+;; WE Bind C-c p to show the list of projectile hotkeys
+;; Just hit C-c p and ivy will show us all of the potential commands
+(use-package projectile
+  :diminish projectile-mode
+  :config (projectile-mode)
+  :custom ((projectile-completion-system 'ivy))
+  :bind-keymap
+  ("C-c p" . projectile-command-map)
+  :init
+  (when (file-directory-p "~/src")
+    (setq projectile-project-search-path '("~/src")))
+  (setq projectile-switch-project-action #'projectile-dired))
+
+;; add additional functionality when searching
+;; usage:
+;; C-c p f
+;; M-o
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgbc716d9" class="outline-2">
+<h2 id="orgbc716d9">Magit - Git Awesomeness</h2>
+<div class="outline-text-2" id="text-orgbc716d9">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(use-package magit
+  :custom
+  (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+;; evil-magit removed from melpa. now part of evil-collection
+;;(use-package evil-magit
+;;  :after magit)
+;;
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgcea479e" class="outline-2">
+<h2 id="orgcea479e">Markdown Mode</h2>
+<div class="outline-text-2" id="text-orgcea479e">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; Support for MARKDOWN
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+
+;; grip mode - markdown
+;; Prerequisite: pip install grip in a shell
+;; use keybindings
+(use-package grip-mode
+  :ensure t
+  :bind (:map markdown-mode-command-map
+	      ("g" . grip-mode)))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaeb4874" class="outline-2">
+<h2 id="orgaeb4874">Org Mode</h2>
+<div class="outline-text-2" id="text-orgaeb4874">
+</div>
+<div id="outline-container-orgc91ff19" class="outline-3">
+<h3 id="orgc91ff19">Basic Setup</h3>
+<div class="outline-text-3" id="text-orgc91ff19">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; https://orgmode.org/
+
+(defun jg/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (auto-fill-mode 0)
+  (visual-line-mode 1)
+  (setq evil-auto-indent nil))
+
+(use-package org
+  :hook (org-mode . jg/org-mode-setup)
+  :config
+  (setq org-ellipsis " ↓"
+	org-hide-emphasis-markers t))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgc9928b9" class="outline-3">
+<h3 id="orgc9928b9">Org Bullets - Fix those Nasty Org Bullets</h3>
+<div class="outline-text-3" id="text-orgc9928b9">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode))
+;;  :custom
+;;  (org-bullets-bullet-list '()))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org2423ff4" class="outline-3">
+<h3 id="org2423ff4">Draw List with Dots</h3>
+<div class="outline-text-3" id="text-org2423ff4">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">;; replace list hyphen with a dot
+(font-lock-add-keywords 'org-mode
+			'(("^ *\\([-]\\) "
+			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org5435608" class="outline-3">
+<h3 id="org5435608">Scale the Headings</h3>
+<div class="outline-text-3" id="text-org5435608">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; change the scale of the various headings
+(dolist (face '((org-level-1 . 1.2)
+		(org-level-2 . 1.1)
+		(org-level-3 . 1.05)
+		(org-level-4 . 1.0)
+		(org-level-5 . 1.1)
+		(org-level-6 . 1.1)
+		(org-level-7 . 1.1)
+		(org-level-8 . 1.1))))
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orged945ae" class="outline-3">
+<h3 id="orged945ae">Add Space to the Sides So that We Aren't Pressing Up Against the Left Margin</h3>
+<div class="outline-text-3" id="text-orged945ae">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(defun jg/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+	visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :defer t
+  :hook (org-mode . jg/org-mode-visual-fill))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4f8a6aa" class="outline-3">
+<h3 id="org4f8a6aa">Org Babel - Provide Lanaguage Highlighting in Src Blocks (and execution)</h3>
+<div class="outline-text-3" id="text-org4f8a6aa">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)))
+
+(setq org-confirm-babel-evaluate nil)
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4284cbe" class="outline-3">
+<h3 id="org4284cbe">Add Src Block Templating</h3>
+<div class="outline-text-3" id="text-org4284cbe">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; this is needed as of Org 0.2
+;; now all you have to do in org mode to create a
+;; code block for, say python, is type
+;; &lt;py
+;; and hit tab
+(require 'org-tempo)
+
+(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("py" . "src python"))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org79aeb0b" class="outline-3">
+<h3 id="org79aeb0b">Set the Background Color of Blocks So That They are 3% Darker</h3>
+<div class="outline-text-3" id="text-org79aeb0b">
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+;; set the background of the begin / end block in org mode to be 3% darker
+(require 'color)
+(set-face-attribute 'org-block nil :background
+		    (color-darken-name
+		     (face-attribute 'default :background) 3))
+
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgf10f392" class="outline-3">
+<h3 id="orgf10f392">Auto Tangle Configuration FIles</h3>
+<div class="outline-text-3" id="text-orgf10f392">
+<p>
+If you put this in your <i>init.el</i> (or avaluate the buffer) then subsequent saves will auto generate the config
+</p>
+
+<div class="org-src-container">
+<pre class="src src-emacs-lisp">
+ ;; automatically tangle this file when we save. This block does 
+ (defun jg/org-babel-tangle-config ()
+   (when (string-equal (buffer-file-name)
+		       (expand-file-name "~/src/emacs/emacs_configs/init_el.org"))
+     ;; dynamic scoping
+     (let ((org-confirm-babel-evaluate nil ))
+       (org-babel-tangle))))
+
+(add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'jg/org-babel-tangle-config)))
+
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgadab9e6" class="outline-2">
+<h2 id="orgadab9e6">For the Future</h2>
+<div class="outline-text-2" id="text-orgadab9e6">
+<p>
+There are plenty of interesting looking packages that I have not had time to try: Here is a list
+</p>
+</div>
+
+<div id="outline-container-orga2e429f" class="outline-3">
+<h3 id="orga2e429f">Swankify the Checkboxes</h3>
+<div class="outline-text-3" id="text-orga2e429f">
+<p>
+Everything is looking quite nice . Except for those checkboxes. I want to render them using font icons so that they can look as nice as the unordered lists and the bullets. I found a blog post on this
+</p>
+
+<p>
+<a href="https://jft.home.blog/2019/07/17/use-unicode-symbol-to-display-org-mode-checkboxes/">https://jft.home.blog/2019/07/17/use-unicode-symbol-to-display-org-mode-checkboxes/</a>
+</p>
+</div>
+</div>
+
+<div id="outline-container-org19c7a29" class="outline-3">
+<h3 id="org19c7a29">Automatically Generate an Org Mode Table of Contents</h3>
+<div class="outline-text-3" id="text-org19c7a29">
+<p>
+<a href="https://github.com/alphapapa/org-make-toc">https://github.com/alphapapa/org-make-toc</a>
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Jonathan Gerber</p>
+<p class="date">Created: 2022-05-13 Fri 10:23</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
