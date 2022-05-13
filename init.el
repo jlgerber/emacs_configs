@@ -439,3 +439,30 @@
   :ensure t
   :bind (:map markdown-mode-command-map
 	      ("g" . grip-mode)))
+
+;; Org Babel
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (python . t)))
+
+(setq org-confirm-babel-evaluate nil)
+
+;; this is needed as of Org 0.2
+;; now all you have to do in org mode to create a
+;; code block for, say python, is type
+;; <py
+;; and hit tab
+(require 'org-tempo)
+
+(add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("py" . "src python"))
+
+;; set the background of the begin / end block in org mode to be 3% darker
+(require 'color)
+(set-face-attribute 'org-block nil :background
+                    (color-darken-name
+                     (face-attribute 'default :background) 3))
+
