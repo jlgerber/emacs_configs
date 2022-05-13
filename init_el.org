@@ -150,6 +150,8 @@ Read about it on the wiki here: [[https://www.emacswiki.org/emacs/SavePlace]]
 
 *  Reload Files if They Change On Disk
 
+This setting handles the case where a file on disk has changed. For instance, you might be editing a file under version control that gets refreshed after a git pull.
+
 #+begin_src emacs-lisp
 
   ;; pick up changes on disk. (like if you use git to update data on disk)
@@ -158,6 +160,8 @@ Read about it on the wiki here: [[https://www.emacswiki.org/emacs/SavePlace]]
 #+end_src
 
 * Set The Font
+
+Here is an example of setting different fonts on two different oses.
 
 #+begin_src emacs-lisp
 
@@ -235,7 +239,9 @@ By default, emacs ships pointing at GnuELPA. However, we need to add a couple of
 #+end_src
 
 * Load and Set Up Ivy and Counsel
-
+First, what are ivy and counsel?
+- ivy is a UI to narrow down a list of selections while typing.
+- counsel tailors ivy's ui for specific situations 
 ** Load counsel
 #+begin_src emacs-lisp
   (use-package counsel)
@@ -282,7 +288,6 @@ By default, emacs ships pointing at GnuELPA. However, we need to add a couple of
 #+end_src
 
 * Configure the Mode Line at the Bottom of Emacs
-
 
 Doom Modeline makes the bottom modeline modern looking. It adds colors and icons and just plain goodness.
 
@@ -343,6 +348,8 @@ The docs are quite good. They have a bunch of configuration options. And they ca
 
 * Color Pairs of Delimiters using rainbow-delimiters package
 
+As a programmer, this packages helps see matching brackets, parens, etc. Very useful for languages other than Python. Like Lisp for instance. or C++ or Rust or Go or...
+
 #+begin_src emacs-lisp
 
   ;; color the delimiters in prog-mode (any programming mode)
@@ -370,6 +377,10 @@ The docs are quite good. They have a bunch of configuration options. And they ca
 
 * Get Even More Information from Ivy with /ivy-rich/ Package
 
+Rich transformers for commands from /ivy/ and /counsel/.
+
+            [[https://github.com/Yevgnen/ivy-rich]]
+   
 #+begin_src emacs-lisp
 
   ;; ivy-rich
