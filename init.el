@@ -376,3 +376,66 @@
 ;; evil-magit removed from melpa. now part of evil-collection
 ;;(use-package evil-magit
 ;;  :after magit)
+;;
+
+;;------------------------;;
+;;       ORG MODE         ;;
+;;------------------------;;
+;; https://orgmode.org/
+
+(defun jg/org-mode-setup ()
+  (org-indent-mode)
+  (variable-pitch-mode 1)
+  (auto-fill-mode 0)
+  (visual-line-mode 1)
+  (setq evil-auto-indent nil))
+
+(use-package org
+  :hook (org-mode . jg/org-mode-setup)
+  :config
+  (setq org-ellipsis " ↓"
+	org-hide-emphasis-markers t))
+  
+(use-package org-bullets
+  :after org
+  :hook (org-mode . org-bullets-mode))
+;;  :custom
+;;  (org-bullets-bullet-list '()))
+
+;; replace list hyphen with a dot
+(font-lock-add-keywords 'org-mode
+			'(("^ *\\([-]\\) "
+			   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+;; change the scale of the various headings
+(dolist (face '((org-level-1 . 1.2)
+		(org-level-2 . 1.1)
+		(org-level-3 . 1.05)
+		(org-level-4 . 1.0)
+		(org-level-5 . 1.1)
+		(org-level-6 . 1.1)
+		(org-level-7 . 1.1)
+		(org-level-8 . 1.1))))
+
+(defun jg/org-mode-visual-fill ()
+  (setq visual-fill-column-width 100
+	visual-fill-column-center-text t)
+  (visual-fill-column-mode 1))
+
+(use-package visual-fill-column
+  :defer t
+  :hook (org-mode . jg/org-mode-visual-fill))
+
+;; Support for MARKDOWN
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+
+;; grip mode - markdown
+;; Prerequisite: pip install grip in a shell
+;; use keybindings
+(use-package grip-mode
+  :ensure t
+  :bind (:map markdown-mode-command-map
+	      ("g" . grip-mode)))
