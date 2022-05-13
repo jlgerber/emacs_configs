@@ -1,0 +1,50 @@
+# the following is the Preamble (and this is a line note)
+#+title: How to use ORG Mode
+#+author: Jonathan Gerber
+
+* Collapsing and Expanding Headings
+
+You can hit S-TAB to cycle *through* collapse / expand of levels
+
+* Key Bindings
+
+- M-ENTER inserts something at the same level
+- Insert a[[https://orgmode.org][ link]] in your document by typing M-x ^org insert link
+  To navigate to a link in the buffer, you can click on it now
+
+** Inserting Tables
+   
+| Name  | Age | Uses Emacs |
+| David |  22 | yes        |
+| frank |  32 | no         |
+
+   Once you format the first line, you can hit tab and it will reformat
+   to line up the pipes
+   
+   - If you have bullet lists
+   - You can hit  M-RETURN
+   - And you will get the next line
+   - If you type S-M-RETURN you will get a checkbox
+
+*** Checkbox lists can be created with S-M-RET
+
+- [ ] First item
+- [ ] 
+- [ ] 
+- [ ] 
+
+** Comment Block
+#+begin_example
+monospace
+this is simply monospace. Nothing else
+#+end_example
+
+** Inserting Code Block
+
+  #+begin_src emacs-lisp
+    (defun my-lisp-func ()
+      (message "Hello!"))
+  #+end_src
+
+  NB. In order to get highlighting and formattting while you type, you must first create the begin and end src tags
+  
