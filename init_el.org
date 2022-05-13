@@ -1,0 +1,712 @@
+#+title Init.el Configuration
+#+PROPERTY: header-args:emacs-lisp :tangle ./init-new.el
+
+* Literate Programming
+
+- You can extract the blocks of code into a file as configured via the PROPERTY above, using the following command
+
+#+begin_src shell
+
+M-x org-babel-tangle
+  
+#+end_src
+
+If you want to be more targeted, you can set the target on a per code block basis. Following the name of the language, you add a /:tangle/ and then the name of the /output file/.
+
+#+begin_example
+
+    #+begin_src python :tangle ./my_output_file.el
+
+#+end_example
+
+* Basic Configuration
+
+#+begin_src emacs-lisp
+
+;; you can setq multiple variables in the same setq function call
+(setq inhibit-startup-message t ;; get rid of welcome screen  
+      visible-bell t)           ;; Flash when the bell rings
+
+;; Turn off some unneeded ui elements
+(menu-bar-mode 1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+(set-fringe-mode 10)             ;; provide some breathing room
+
+(column-number-mode)
+(global-display-line-numbers-mode 1)
+
+;; disable line numbers for some modes
+(dolist (mode '(eshell-mode-hook
+		term-mode-hook
+		shell-mode-hook
+		org-mode-hook))
+  (add-hook mode(lambda () (display-line-numbers-mode 0))))
+
+#+end_src
+
+* Theme-ing
+
+You can specify a theme in your config using the /load-theme/ function. We are loading /modus vivendi/
+
+#+begin_src emacs-lisp
+
+;; Load the Modus Vivendi dark theme
+;; There is a good doc on customizing modus-vivendi. check it out. prot.
+(load-theme 'modus-vivendi t)
+
+;; Alternate theme 
+;; (load-theme 'deeper-blue 1) 
+
+#+end_src
+
+Modus vivendi has a bunch of configuration documentation
+
+[[https://protesilaos.com/emacs/modus-themes]]
+
+
+* Recentf Mode
+
+/recentf/ is a minor mode that builds a list of recently opened files. This list is automatically saved across sessions on existing Emacs. You can access this list through the command line menu.
+
+To enable, put the following in your config
+
+#+begin_src emacs-lisp
+
+  (recentf-mode 1) 
+  (setq recentf-max-menu-items 25)
+  (setq recentf-max-saved-items 25)
+
+  ;; To manually set a hotkey
+  ;;(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+
+  ;; Otherwise, use
+  ;;    M-x recentf-open-files
+  
+#+end_src
+
+You can find out all about /recentf/ mode here: [[https://www.emacswiki.org/emacs/RecentFiles]]
+
+* Minibuffer Prompt History
+
+You can tweak your minibuffer history, setting a limit to the history.
+
+#+begin_src emacs-lisp
+  
+  ;; remembering minibuffer prompt history
+  (setq history-length 25)
+
+  ;; turn on savehist mode
+  (savehist-mode 1)
+  ;; now you can use
+  ;;   M-n (next-history-element)
+  ;;   M-p (previous-history-element)
+
+#+end_src
+
+You can find out more about the Minibuffer History in the manual here: [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Minibuffer-History.html]]
+
+Additionally, you can read up on it on the wiki here: [[https://www.emacswiki.org/emacs/MinibufferHistory]]
+
+
+* Go to the Last Place that you Visited When Reopening a File with Save Place Mode
+
+#+begin_src emacs-lisp
+
+  ;; save place mode
+  ;; remembering the last place you visited in a file
+  (save-place-mode 1)
+
+#+end_src
+
+Read about it on the wiki here: [[https://www.emacswiki.org/emacs/SavePlace]]
+
+
+* Don't Show Pop Up Dialog Boxes with Buttons. Use Text Instead
+
+#+begin_src emacs-lisp
+
+;; dont show pop up UI dialg-boxes with buttons. keep things text oriented
+(setq use-dialog-box nil)
+
+#+end_src
+
+*  Reload Files if They Change On Disk
+
+#+begin_src emacs-lisp
+
+  ;; pick up changes on disk. (like if you use git to update data on disk)
+  (global-auto-revert-mode 1)
+
+#+end_src
+
+* Set The Font
+
+#+begin_src emacs-lisp
+
+  (set-face-attribute 'default nil :font "SpaceMono Nerd Font Mono" :height 120)
+
+#+end_src
+
+* Setup the Package Manager
+
+The wiki has a good writeup on configuring the package manager and installing packages here:
+
+    [[https://www.emacswiki.org/emacs/InstallingPackages]]
+
+** Require package
+
+Emacs has a package system, much like many modern languages. To set it up, we need to require the /package/ package
+
+#+begin_src emacs-lisp
+
+  (require 'package)
+
+#+end_src
+
+** Configure Package Sources
+
+By default, emacs ships pointing at GnuELPA. However, we need to add a couple of additional repos, using the /add-to-list/ function
+
+#+begin_src emacs-lisp
+
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+  (add-to-list 'package-archives '("elpa" . "https://elpa.gnu.org/packages/") t)
+
+#+end_src
+
+** Initialize Package Module and Install use-package module
+
+#+begin_src emacs-lisp
+
+  (package-initialize)
+
+  ;; remember to run M-x package-refresh-contents
+  (unless package-archive-contents
+    (package-refresh-contents))
+
+  ;; Initialize use-package
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+
+  (require 'use-package)
+  
+  ;; always load packages if they don't exist from the package repo(s)
+  (setq use-package-always-ensure t)
+
+#+end_src
+
+* Load Package which Can Show Window that Display's Typed Commands
+
+*Usage:*
+- To turn on the command log buffer: *M-x command-log-buffer*
+- To Show the command buffer: *clm/toggle-command-log-buffer*
+   
+#+begin_src emacs-lisp
+
+  ;; show window of commands
+  (use-package command-log-mode)
+  
+  ;; to turn on the command log buffer
+  ;; M-x command-log-buffer
+  ;; to show the command log buffer
+  ;; clm/toggle-command-log-buffer
+#+end_src
+
+* Load and Set Up Ivy and Counsel
+
+** Load counsel
+#+begin_src emacs-lisp
+  (use-package counsel)
+#+end_src
+
+** Load and Configure Ivy
+#+begin_src emacs-lisp
+
+  (use-package ivy
+    :diminish
+    :bind (("C-s" . swiper)
+           :map ivy-minibuffer-map
+           ("TAB" . ivy-alt-done)
+           ("C-f" . ivy-alt-done)
+           ("C-l" . ivy-alt-done)
+           ("C-j" . ivy-next-line)
+           ("C-k" . ivy-previous-line)
+           :map ivy-switch-buffer-map
+           ("C-k" . ivy-previous-line)
+           ("C-l" . ivy-done)
+           ("C-d" . ivy-switch-buffer-kill)
+           :map ivy-reverse-i-search-map
+           ("C-k" . ivy-previous-line)
+           ("C-d" . ivy-reverse-i-search-kill))
+    :init
+    (ivy-mode 1)
+    :config
+    (setq ivy-use-virtual-buffers t)
+    (setq ivy-wrap t)
+    (setq ivy-count-format "(%d/%d) ")
+    (setq enable-recursive-minibuffers t)
+
+    ;; Use different regex strategies per completion command
+    (push '(completion-at-point . ivy--regex-fuzzy) ivy-re-builders-alist) ;; This doesn't seem to work...
+    (push '(swiper . ivy--regex-ignore-order) ivy-re-builders-alist)
+    (push '(counsel-M-x . ivy--regex-ignore-order) ivy-re-builders-alist)
+
+    ;; Set minibuffer height for different commands
+    (setf (alist-get 'counsel-projectile-ag ivy-height-alist) 15)
+    (setf (alist-get 'counsel-projectile-rg ivy-height-alist) 15)
+    (setf (alist-get 'swiper ivy-height-alist) 15)
+    (setf (alist-get 'counsel-switch-buffer ivy-height-alist) 7))
+
+#+end_src
+
+* Configure the Mode Line at the Bottom of Emacs
+
+
+Doom Modeline makes the bottom modeline modern looking. It adds colors and icons and just plain goodness.
+
+In order to take full advantage of doom modeline, you need to install icon fonts. To do so you type the following command once:
+
+M-x all-the-icons-install-fonts
+
+The docs are quite good. They have a bunch of configuration options. And they can be found here:
+
+[[https://github.com/seagle0128/doom-modeline
+]]
+** Load doom modeline package
+#+begin_src emacs-lisp
+
+  ;; customize the mode line
+  ;; doom modeline is awesome
+  ;; https://github.com/seagle0128/doom-modeline
+  ;; to run you need to M-x all-the-icons-install-fonts
+  ;; the docs have a bunch of configuration options
+  (use-package doom-modeline
+    :ensure t
+    :init (doom-modeline-mode 1)
+    :custom ((doom-modeline-height 10)))
+  
+#+end_src
+
+** Configure Doom Modeline
+
+#+begin_src emacs-lisp
+
+  ;; Whether display the icon for `major-mode'. It respects `doom-modeline-icon'.
+  (setq doom-modeline-major-mode-icon t)
+
+  ;; Whether display the colorful icon for `major-mode'.
+  ;; It respects `all-the-icons-color-icons'.
+  (setq doom-modeline-major-mode-color-icon t)
+
+  ;; Whether display the icon for the buffer state. It respects `doom-modeline-icon'.
+  (setq doom-modeline-buffer-state-icon t)
+
+  ;; Whether display the modification icon for the buffer.
+  ;; It respects `doom-modeline-icon' and `doom-modeline-buffer-state-icon'.
+  (setq doom-modeline-buffer-modification-icon t)
+
+  ;; Whether display the buffer name.
+  (setq doom-modeline-buffer-name t)
+
+  ;; Whether display the minor modes in the mode-line.
+  (setq doom-modeline-minor-modes t) ;; was nil
+
+  ;; Whether display the `lsp' state. Non-nil to display in the mode-line.
+  (setq doom-modeline-lsp t)
+
+  ;; Whether display the environment version.
+  (setq doom-modeline-env-version t)
+
+#+end_src
+
+* Color Pairs of Delimiters using rainbow-delimiters package
+
+#+begin_src emacs-lisp
+
+  ;; color the delimiters in prog-mode (any programming mode)
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+
+#+end_src
+
+* Add Description of Key Completions for Hotkeys using /which-key/ Package
+
+#+begin_src emacs-lisp
+
+  ;; adds descriptions of key completions for hotkeys
+  ;; eg if you type C-h it will show a minibuffer full of choices
+  ;; or C-x for instance
+  ;; you can set the delay so that the extra help doesn't show up
+  ;; before a set amount of time
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 0.3))
+
+#+end_src
+
+* Get Even More Information from Ivy with /ivy-rich/ Package
+
+#+begin_src emacs-lisp
+
+  ;; ivy-rich
+  ;; in addition to ivy
+  ;; gives you extra info for a few of the built in commands
+  ;; https://github.com/Yevgnen/ivy-rich
+  (use-package ivy-rich
+    :init
+    (ivy-rich-mode 1))
+ #+end_src
+ 
+* Setup Counsel
+
+#+begin_src emacs-lisp
+ 
+  ;;(setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  (use-package counsel
+    :bind (("M-x" . counsel-M-x)
+           ("C-x b" . counsel-ibuffer)
+           ("C-x C-f" . counsel-find-file)
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history))
+    :config
+    (setq ivy-initial-inputs-alist nil)) ;; Don't start searches with ^
+
+#+end_src
+   
+* Install and setup /helpful/ - augmenting the emacs help system
+
+#+begin_src emacs-lisp
+
+  ;; helpful
+  ;; https://github.com/Wilfred/helpful
+  ;; augment's emac's help
+  (use-package helpful
+    :custom
+    (counsel-describe-function-function #'helpful-callable)
+    (counsel-describe-variable-function #'helpful-variable)
+    :bind
+    ([remap describe-function] . counsel-describe-function)
+    ([remap describe-command] . helpful-command)
+    ([remap describe-variable] . counsel-describe-variable)
+    ([remap describe-key] . helful-key))
+
+#+end_src
+
+* Install /general/ to Set Up Keybindings
+
+#+begin_src emacs-lisp
+
+  (use-package general
+    :config
+    (general-evil-setup t)
+    ;; define a leader key 
+    (general-create-definer rune/leader-keys
+       :keymaps '(normal insert visual emacs)
+       :prefix "SPC"
+       :global-prefix "C-SPC")
+  
+    (rune/leader-keys
+     "t" '(:ignore t :which-key "toggles")
+     "tt" '(counsel-load-theme :which-key "choose theme")))
+
+#+end_src
+
+* Evil Mode - Use VI Keybindings
+
+#+begin_src emacs-lisp
+
+  ;; use vim keybindings
+  ;; https://github.com/emacs-evil/evil
+  (defun rune/evil-hook ()
+    (dolist (mode '(custom-mode
+                    eshell-mode
+                    git-rebase-mode
+                    erc-mode
+                    circe-server-mode
+                    circe-chat-mode
+                    circe-query-mode
+                    sauron-mode
+                    term-mode))
+      (add-to-list 'evil-emacs-state-modes mode)))
+
+  (use-package evil
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    ;:hook (evil-mode . rune/evil-hook)
+    :config
+    (evil-mode 1)
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+    ;; use visual line motions even outside of visual-line-mode buffers
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line)
+
+    (evil-set-initial-state 'messages-buffer-mode 'normal)
+    (evil-set-initial-state 'dashboard-mode 'normal))
+
+
+  ;; evil-collection
+  ;; setup for evil modes that "just work"
+  (use-package evil-collection
+    :after (evil magit)
+    :config
+    (evil-collection-init))
+  ;;
+  ;; EVIL MODE
+  ;;
+  ;; You can always leave evil mode using C-z
+  ;(evil-mode 1)
+
+#+end_src
+
+* Key binding combinator with /hydra/
+
+#+begin_src emacs-lisp
+
+  ;;-----------------
+  ;;     hydra
+  ;;-----------------
+  ;; key binding combinator
+  ;; https://github.com/abo-abo/hydra
+  (use-package hydra
+    :defer t)
+  ;; define a hydra to scale text up and down
+  (defhydra hydra-text-scale (:timeout 4)
+    "scale text"
+    ("j" text-scale-increase "in")
+    ("k" text-scale-decrease "out")
+    ("f" nil "finished" :exit t))
+
+  ;; access via C-SPC t s
+  ;; define a hydra to scale text up and do
+  (rune/leader-keys
+   "ts" '(hydra-text-scale/body :which-key "scale text"))
+
+#+end_src
+
+* Projectile - Project Management
+
+#+begin_src emacs-lisp
+
+  ;; url:
+  ;; https://www.youtube.com/watch?v=INTu30BHZGk&list=PLEoMzSkcN8oPH1au7H6B7bBJ4ZO7BXjSZ&index=4
+
+  ;;-----------------
+  ;; Projectile
+  ;;-----------------
+  ;; a project management package
+  ;;https://github.com/bbatsov/projectile
+  ;; WE Bind C-c p to show the list of projectile hotkeys
+  ;; Just hit C-c p and ivy will show us all of the potential commands
+  (use-package projectile
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom ((projectile-completion-system 'ivy))
+    :bind-keymap
+    ("C-c p" . projectile-command-map)
+    :init
+    (when (file-directory-p "~/src")
+      (setq projectile-project-search-path '("~/src")))
+    (setq projectile-switch-project-action #'projectile-dired))
+
+  ;; add additional functionality when searching
+  ;; usage:
+  ;; C-c p f
+  ;; M-o
+  (use-package counsel-projectile
+    :config (counsel-projectile-mode))
+
+#+end_src
+
+* Magit - Git Awesomeness
+
+#+begin_src emacs-lisp
+
+  (use-package magit
+    :custom
+    (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
+
+  ;; evil-magit removed from melpa. now part of evil-collection
+  ;;(use-package evil-magit
+  ;;  :after magit)
+  ;;
+
+#+end_src
+
+* Markdown Mode
+
+#+begin_src emacs-lisp
+
+;; Support for MARKDOWN
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown"))
+
+;; grip mode - markdown
+;; Prerequisite: pip install grip in a shell
+;; use keybindings
+(use-package grip-mode
+  :ensure t
+  :bind (:map markdown-mode-command-map
+	      ("g" . grip-mode)))
+
+#+end_src
+
+* Org Mode
+
+** Basic Setup
+
+#+begin_src emacs-lisp
+
+  ;; https://orgmode.org/
+
+  (defun jg/org-mode-setup ()
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (auto-fill-mode 0)
+    (visual-line-mode 1)
+    (setq evil-auto-indent nil))
+
+  (use-package org
+    :hook (org-mode . jg/org-mode-setup)
+    :config
+    (setq org-ellipsis " ↓"
+          org-hide-emphasis-markers t))
+ #+end_src
+
+** Org Bullets - Fix those Nasty Org Bullets
+
+#+begin_src emacs-lisp
+ 
+  (use-package org-bullets
+    :after org
+    :hook (org-mode . org-bullets-mode))
+  ;;  :custom
+  ;;  (org-bullets-bullet-list '()))
+
+#+end_src
+
+** Draw List with Dots
+
+#+begin_src emacs-lisp
+  ;; replace list hyphen with a dot
+  (font-lock-add-keywords 'org-mode
+                          '(("^ *\\([-]\\) "
+                             (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+
+#+end_src
+
+** Scale the Headings
+
+#+begin_src emacs-lisp
+
+  ;; change the scale of the various headings
+  (dolist (face '((org-level-1 . 1.2)
+                  (org-level-2 . 1.1)
+                  (org-level-3 . 1.05)
+                  (org-level-4 . 1.0)
+                  (org-level-5 . 1.1)
+                  (org-level-6 . 1.1)
+                  (org-level-7 . 1.1)
+                  (org-level-8 . 1.1))))
+#+end_src
+
+** Add Space to the Sides So that We Aren't Pressing Up Against the Left Margin
+
+#+begin_src emacs-lisp
+
+  (defun jg/org-mode-visual-fill ()
+    (setq visual-fill-column-width 100
+          visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  (use-package visual-fill-column
+    :defer t
+    :hook (org-mode . jg/org-mode-visual-fill))
+
+#+end_src
+
+** Org Babel - Provide Lanaguage Highlighting in Src Blocks (and execution)
+
+#+begin_src emacs-lisp
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)))
+
+  (setq org-confirm-babel-evaluate nil)
+
+#+end_src
+
+** Add Src Block Templating
+
+#+begin_src emacs-lisp
+
+  ;; this is needed as of Org 0.2
+  ;; now all you have to do in org mode to create a
+  ;; code block for, say python, is type
+  ;; <py
+  ;; and hit tab
+  (require 'org-tempo)
+
+  (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+
+#+end_src
+
+** Set the Background Color of Blocks So That They are 3% Darker
+
+#+begin_src emacs-lisp
+
+  ;; set the background of the begin / end block in org mode to be 3% darker
+  (require 'color)
+  (set-face-attribute 'org-block nil :background
+                      (color-darken-name
+                       (face-attribute 'default :background) 3))
+
+#+end_src
+
+** Auto Tangle Configuration FIles
+
+If you put this in your /init.el/ (or avaluate the buffer) then subsequent saves will auto generate the config
+
+#+begin_src emacs-lisp
+
+   ;; automatically tangle this file when we save. This block does 
+   (defun jg/org-babel-tangle-config ()
+     (when (string-equal (buffer-file-name)
+                         (expand-file-name "~/src/emacs/emacs_configs/init_el.org"))
+       ;; dynamic scoping
+       (let ((org-confirm-babel-evaluate nil ))
+         (org-babel-tangle))))
+
+  (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'jg/org-babel-tangle-config)))
+  
+#+end_src
+
+
+* For the Future
+
+There are plenty of interesting looking packages that I have not had time to try: Here is a list
+
+** Swankify the Checkboxes
+
+Everything is looking quite nice . Except for those checkboxes. I want to render them using font icons so that they can look as nice as the unordered lists and the bullets. I found a blog post on this
+
+[[https://jft.home.blog/2019/07/17/use-unicode-symbol-to-display-org-mode-checkboxes/]]
+
+** Automatically Generate an Org Mode Table of Contents
+[[https://github.com/alphapapa/org-make-toc]]
+
