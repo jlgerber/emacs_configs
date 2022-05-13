@@ -13,12 +13,6 @@ M-x org-babel-tangle
 
 If you want to be more targeted, you can set the target on a per code block basis. Following the name of the language, you add a /:tangle/ and then the name of the /output file/.
 
-#+begin_example
-
-    #+begin_src python :tangle ./my_output_file.el
-
-#+end_example
-
 * Basic Configuration
 
 #+begin_src emacs-lisp
@@ -52,19 +46,21 @@ You can specify a theme in your config using the /load-theme/ function. We are l
 
 #+begin_src emacs-lisp
 
-;; Load the Modus Vivendi dark theme
-;; There is a good doc on customizing modus-vivendi. check it out. prot.
-(load-theme 'modus-vivendi t)
+  ;; Installed Badger theme. it looks good in org mode
+  (load-theme 'badger t)
+  
+  ;; Load the Modus Vivendi dark theme
+  ;; There is a good doc on customizing modus-vivendi. check it out. prot.
+  ;;(load-theme 'modus-vivendi t)
 
-;; Alternate theme 
-;; (load-theme 'deeper-blue 1) 
+  ;; Alternate theme 
+  ;; (load-theme 'deeper-blue 1) 
 
 #+end_src
 
 Modus vivendi has a bunch of configuration documentation
 
 [[https://protesilaos.com/emacs/modus-themes]]
-
 
 * Recentf Mode
 
@@ -109,7 +105,6 @@ You can find out more about the Minibuffer History in the manual here: [[https:/
 
 Additionally, you can read up on it on the wiki here: [[https://www.emacswiki.org/emacs/MinibufferHistory]]
 
-
 * Go to the Last Place that you Visited When Reopening a File with Save Place Mode
 
 #+begin_src emacs-lisp
@@ -121,7 +116,6 @@ Additionally, you can read up on it on the wiki here: [[https://www.emacswiki.or
 #+end_src
 
 Read about it on the wiki here: [[https://www.emacswiki.org/emacs/SavePlace]]
-
 
 * Don't Show Pop Up Dialog Boxes with Buttons. Use Text Instead
 
@@ -563,7 +557,6 @@ The docs are quite good. They have a bunch of configuration options. And they ca
 #+end_src
 
 * Org Mode
-
 ** Basic Setup
 
 #+begin_src emacs-lisp
@@ -695,7 +688,6 @@ If you put this in your /init.el/ (or avaluate the buffer) then subsequent saves
   (add-hook 'org-mode-hook (lambda () (add-hook 'after-save-hook #'jg/org-babel-tangle-config)))
   
 #+end_src
-
 
 * For the Future
 
