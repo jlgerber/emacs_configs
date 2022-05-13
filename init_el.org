@@ -1,5 +1,7 @@
 #+title Init.el Configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ./init-new.el
+#+OPTIONS: num:nil
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 
 * Literate Programming
 
@@ -8,10 +10,30 @@
 #+begin_src shell
 
 M-x org-babel-tangle
-  
 #+end_src
 
+I was inspired by the folks over at the /system crafters/ youtube channel. They have a literate config here:
+
+[[https://github.com/daviwil/dotfiles/blob/master/Emacs.org]]
+
 If you want to be more targeted, you can set the target on a per code block basis. Following the name of the language, you add a /:tangle/ and then the name of the /output file/.
+
+*** Converting to HTML
+
+Here is a good youtube video on the subject: [[https://www.youtube.com/watch?v=8Gw4Y2EpcOY]]
+
+**** Use M-x org-export-dispatch
+Use h o
+**** Basic Customization - turning off numbers and the toc
+Go to the top of your org file and add an options line prefixes with a hash and a +
+OPTIONS: toc:nil num:nil
+**** Exporting using a theme
+fniessen has a good project for exporting to a styled html file. The github project is here:
+
+        [[https://github.com/fniessen/org-html-themes]]
+
+Go to the top of your file and add a SETUPFILE (prefixed with hash and +)
+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
 
 * Basic Configuration
 
@@ -139,7 +161,10 @@ Read about it on the wiki here: [[https://www.emacswiki.org/emacs/SavePlace]]
 
 #+begin_src emacs-lisp
 
-  (set-face-attribute 'default nil :font "SpaceMono Nerd Font Mono" :height 120)
+;; set font per system
+(pcase system-type
+  ('gnu/linux (set-face-attribute 'default nil :font "SpaceMono Nerd Font Mono" :height 120))
+  ( 'darwin (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 120)))
 
 #+end_src
 

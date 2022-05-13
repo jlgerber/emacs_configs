@@ -65,7 +65,11 @@
 ;; pick up changes on disk. (like if you use git to update data on disk)
 (global-auto-revert-mode 1)
 
-(set-face-attribute 'default nil :font "SpaceMono Nerd Font Mono" :height 120)
+;; set font per system
+(pcase system-type
+  ('gnu/linux (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 120))
+  ( 'darwin (set-face-attribute 'default nil :font "FiraCode Nerd Font Mono" :height 120)))
+
 
 ;;---------------------
 ;;   PACKAGE MANAGER
@@ -143,7 +147,7 @@
 ;; customize the mode line
 ;; doom modeline is awesome
 ;; https://github.com/seagle0128/doom-modeline
-;; to run you need to M-x all-the-icons-install-fonts
+;; to run you need to M-x all-the-icons-install
 ;; the docs have a bunch of configuration options
 (use-package doom-modeline
   :ensure t
