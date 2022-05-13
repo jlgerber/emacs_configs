@@ -32,6 +32,7 @@ You can hit S-TAB to cycle *through* collapse / expand of levels
 - [ ] 
 - [ ] 
 - [ ] 
+(use-package org-babel)
 
 ** Comment Block
 #+begin_example
@@ -48,3 +49,40 @@ this is simply monospace. Nothing else
 
   NB. In order to get highlighting and formattting while you type, you must first create the begin and end src tags
   
+* You can define python and run org babel
+
+You can press C-c C-c with the mouse in the block to execute this
+
+You can also display the results of code snippet execution
+- On the /begin/ line. after the named language, add /:results/ followed by either /output/ or /value/
+  - In hte case of /output/ a subsequent #+RESULTS will display any values sent to stdout
+  - In the case of /value/ a subsequent #+RESULTS will display any value returned from the code 
+    
+#+begin_src python :results output
+  def greeting():
+    return ("Hello!")
+
+  print (greeting())
+#+end_src
+
+#+RESULTS:
+: Hello!
+* Structure Templates for Org Mode
+- you can create templates for these code blocks and then expand them out by typing '<' plus the hame of the template
+  
+  #+begin_src emacs-lisp
+
+    ;; this is needed as of Org 0.2
+    (require 'org-tempo)
+
+    (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
+    (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+    (add-to-list 'org-structure-template-alist '("py" . "src python"))
+    
+  #+end_src
+ 
+* Babel Information
+[[https://orgmod.org/worg/org-contrib/babel/]]
+[[https://orgmode.org/worg/org-contrib/babel/languages.html]]
+  
+this is just a test to see if the auto tangle works
