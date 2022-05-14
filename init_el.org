@@ -1,4 +1,4 @@
-#+title Init.el Configuration
+#+title Init.el Configuratio
 #+PROPERTY: header-args:emacs-lisp :tangle ./init-new.el
 #+OPTIONS: num:nil
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/theme-readtheorg.setup
@@ -639,16 +639,29 @@ Rich transformers for commands from /ivy/ and /counsel/.
 
 #+begin_src emacs-lisp
 
-  ;; change the scale of the various headings
-  (dolist (face '((org-level-1 . 1.2)
-                  (org-level-2 . 1.1)
-                  (org-level-3 . 1.05)
-                  (org-level-4 . 1.0)
-                  (org-level-5 . 1.1)
-                  (org-level-6 . 1.1)
-                  (org-level-7 . 1.1)
-                  (org-level-8 . 1.1))))
+     ;; change the scale of the various headings
+  (with-eval-after-load 'org-faces
+     (dolist (face '((org-level-1 . 1.2)
+                     (org-level-2 . 1.1)
+                     (org-level-3 . 1.05)
+                     (org-level-4 . 1.0)
+                     (org-level-5 . 1.1)
+                     (org-level-6 . 1.1)
+                     (org-level-7 . 1.1)
+                     (org-level-8 . 1.1)))
+     (set-face-attribute (car face) nil :font "Cantarell" :weight 'regular :height (cdr face))))
+
+   ;; Ensure that anything that should be fixed ptich in Org fiels appears that way
+  (with-eval-after-load 'org-faces
+   (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+   (set-face-attribute 'org-code nil :inherit '(shadow fixed-pitch))
+   ;(set-face-attribute 'org-indent nil :inherit '(org-hide fitxed-pitch))
+   (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+   (set-face-attribute 'org-table nil :inherit '(shadow fixed-pitch))
+   (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+   (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 #+end_src
+
 
 ** Add Space to the Sides So that We Aren't Pressing Up Against the Left Margin
 
