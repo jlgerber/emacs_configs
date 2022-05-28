@@ -86,3 +86,26 @@ You can also display the results of code snippet execution
 [[https://orgmode.org/worg/org-contrib/babel/languages.html]]
   
 this is just a test to see if the auto tangle works
+* Org Tasks
+** Update your org initialization to set up a tasks.org file
+#+begin_src emacs-lisp
+
+  (setq org-agenda-files '("~/OrgFiles/Tasks.org"))
+
+#+end_src
+
+As a note, you can put this in your /use-package org/ config block
+** If you edit Tasks.org, you can bring up an agenda window by running
+
+     M-x org-agenda
+     
+** You can schedule tasks
+
+    M-x org-schedule
+
+ This brings up a calendar. You can navigate the calendar using shift plus arrow keys
+** You can set a deadline for a task similarly
+
+M-x org-deadline
+
+

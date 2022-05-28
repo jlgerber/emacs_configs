@@ -597,20 +597,21 @@ Rich transformers for commands from /ivy/ and /counsel/.
 
 #+begin_src emacs-lisp
 
-  ;; https://orgmode.org/
+    ;; https://orgmode.org/
 
-  (defun jg/org-mode-setup ()
-    (org-indent-mode)
-    (variable-pitch-mode 1)
-    (auto-fill-mode 0)
-    (visual-line-mode 1)
-    (setq evil-auto-indent nil))
+    (defun jg/org-mode-setup ()
+      (org-indent-mode)
+      (variable-pitch-mode 1)
+      (auto-fill-mode 0)
+      (visual-line-mode 1)
+      (setq evil-auto-indent nil))
 
-  (use-package org
-    :hook (org-mode . jg/org-mode-setup)
-    :config
-    (setq org-ellipsis " ↓"
-          org-hide-emphasis-markers t))
+    (use-package org
+      :hook (org-mode . jg/org-mode-setup)
+      :config
+      (setq org-ellipsis " ↓"
+            org-agenda '("~/OrgFiles/Tasks.org")
+            org-hide-emphasis-markers t))
  #+end_src
 
 ** Org Bullets - Fix those Nasty Org Bullets
@@ -661,7 +662,6 @@ Rich transformers for commands from /ivy/ and /counsel/.
    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
 #+end_src
-
 
 ** Add Space to the Sides So that We Aren't Pressing Up Against the Left Margin
 
@@ -738,6 +738,33 @@ If you put this in your /init.el/ (or avaluate the buffer) then subsequent saves
   
 #+end_src
 
+*  Rust
+
+https://gist.github.com/helinwang/7430f74d98250ddfb66d02156cf31a38
+
+** Setup Rust
+
+#+begin_src emacs-lisp
+  (use-package rust-mode
+    :hook (rust-mode . lsp)
+    :bind
+    ("C-c g" . rust-run)
+    ("C-c t" . rust-test)
+    ("C-c b" . cargo-process-build)
+    :init
+    (which-function-mode 1)
+    (setq compilation-error-regexp-alist-alist
+      (cons '(cargo "^\\([^ \n]+\\):\\([0-9]+\\):\\([0-9]+\\): \\([0-9]+\\):\\([0-9]+\\) \\(?:[Ee]rror\\|\\([Ww]arning\\)\\):" 1 (2 . 4) (3 . 5) (6))
+        compilation-error-regexp-alist-alist))
+  :config
+  (setq rust-format-on-save t))
+#+end_src
+** Setup Cargo
+#+begin_src emacs-lisp
+  (use-package cargo
+  :hook (rust-mode . cargo-minor-mode)
+  :diminish cargo-minor-mode)
+#+end_src
 * For the Future
 
 There are plenty of interesting looking packages that I have not had time to try: Here is a list
