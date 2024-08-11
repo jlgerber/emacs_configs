@@ -1,0 +1,342 @@
+#+PROPERTY: header-args :tangle yes
+
+* Org Mode Notes
+
+The org mode has a great website. One of the items on it is the [[https://orgmode.org/worg/orgcard.html][org-mode reference card]]
+
+** Org Mode Hotkey for literate programming
+
+Just as a reminder, you don't have to toil, typing in all those special template structures. Per the [[https://orgmode.org/manual/Structure-Templates.html][docs]], You can use hot keys:
+
+#+begin_example
+
+C-c C-,
+
+#+end_example
+
+This key combo will prompt you to select from a number of different templates.
+
+** Org Mode Folding Hotkeys
+
+- *TAB* Over a heading to rotate the subtree between states
+- *S-TAB* (shift tab) To rotate the entire buffer between states
+- *C-u C-u C-u TAB* Shows the whole file, including drawers
+  
+** Org Mode Navigation Hotkeys
+
+- *C-c C-n/p* Next/previous heading
+- *C-c C-f/b* Next/previous heading, same level
+- *C-c C-u* Backward to higher level heading
+- *C-c C-j* jump to another place in the document
+- *S-UP/DOWN* Previous/next plain list item
+ 
+* Emacs Configuration
+** Package Management Setup
+
+We need to require package, and add melpa
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  ;; initialize package sources
+  (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-initialize)
+
+  ;; refresh package contents if necessary
+  (unless package-archive-contents
+    (package-refresh-contents))
+  
+#+END_SRC
+
+** Basic Settings
+
+Here we turn off the startup screen
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+
+#+END_SRC
+
+Now lets turn off the startup screen and message
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (setq inhibit-startup-screen t) ;; no startup screen
+  (setq initial-scratch-message nil) ;; no initial message
+
+#+END_SRC
+
+Turn on line number mode
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (global-display-line-numbers-mode)
+
+#+END_SRC
+
+** Frame Size
+
+We dont want to start up with a dinky frame. lets make it bigger
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (setq default-frame-alist '((width . 140) ;; width in characters
+			      (height . 70))) ;; height in lines
+
+#+END_SRC
+
+** Themes
+
+I like dark themes. Lets load deeper blue.
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  (load-theme 'deeper-blue t)
+  
+#+END_SRC
+
+*** Alternate themes
+
+Here are some alternate dark themes which ship with emacs 29
+
+- (load-theme 'tango-dark t)
+- (load-theme 'deeper-blue t)
+- (load-theme 'misterioso t)
+- (load-theme 'tsdh-dark t)
+- (load-theme 'manoj-dark t)
+- (load-theme 'modus-vivendi t)
+
+* Packages
+** Org Bullets Package
+
+This package makes org mode bullet points look nice. But lets not stop there. Lets configure org mode according to [[https://zzamboni.org/post/beautifying-org-mode-in-emacs/][this post]].
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+      (setq org-hide-emphasis-markers t) ;; hide emphasis markup (/../ for italics, *...* for bold, etc)
+      ;; font lock substitution for list markers
+      (font-lock-add-keywords 'org-mode
+				'(("^ *\\([-]\\) "
+				   (0 (prog1 () (compose-region (match-beginning 1) (match-end 1) "•"))))))
+      (custom-set-faces
+	 '(org-meta-line ((t (:background "#333333" :foreground "#666666")))))
+
+      (custom-set-faces
+	 '(org-block ((t (:background "#000000")))) ; Background color for code blocks
+	 '(org-src-block ((t (:background "#000000")))) ; Background color for source blocks
+	 '(org-src-code ((t (:background "#000000")))) ; Background color for code inside source blocks
+	 )
+	;; Install and configure org-bullets
+	(use-package org-bullets
+	  :ensure t
+	  :config
+	  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+  ;; disp0lay markser while the cursor is on a rich text word
+  ;; this screws org bullets
+  ;; (use-package org-appear
+  ;;   :hook
+  ;;   (org-mode . org-appear-mode))
+
+#+END_SRC
+
+** Doom Modeline
+
+The modeline is rather plain looking right now. Lets customize it. We will try doom-modeline
+
+There are a couple of things we need to do in order to use doom-modeline
+
+1. we need to install nerd fonts
+
+go to the [[https://nerdfonts.com][nerdfonts]] website, download fonts, and install them to
+
+#+begin_example
+
+/usr/share/fonts
+
+#+end_example
+    
+then run
+
+#+begin_example
+
+fc-cache -fv
+
+#+end_example
+
+Next, run M-x nerd-icons-install-fonts
+
+finally, we need to use [[https://github.com/rainstormstudio/nerd-icons.el][nerd-icons]]. And voila, we will have icons in our doom-modeline
+
+#+BEGIN_SRC emacs-lisp :tangle yes
+
+  ;; doom-modeline configuraiton
+  (setq doom-modeline-height 30) ;; only respected in the GUI
+  (setq doom-modeline-major-mode-icon t)
+  (setq doom-modeline-major-mode-color-icon t)
+  (setq doom-modeline-buffer-state-icon t)
+  (setq doom-modeline-buffer-modification-icon t)
+  (setq doom-modeline-minor-modes t) ;; nil by default
+  (setq doom-modeline-lsp-icon t)
+  (setq doom-modeline-time-icon t)
+  (setq doom-modeline-time-live-icon t)
+  (setq doom-modeline-buffer-name t)
+  (setq doom-modeline-lsp t)
+  (setq doom-modeline-modal t)
+  (setq doom-modeline-modal-modern-icon t)
+  (setq doom-modeline-time t)
+  (setq doom-modeline-env-version t)
+  (setq doom-modeline-env-python-executable "python") ; or `python-shell-interpreter'
+  (setq doom-modeline-env-ruby-executable "ruby")
+  (setq doom-modeline-env-perl-executable "perl")
+  (setq doom-modeline-env-go-executable "go")
+  (setq doom-modeline-env-elixir-executable "iex")
+  (setq doom-modeline-env-rust-executable "rustc")
+  (setq doom-modeline-env-load-string "...")
+  ;; nerd-icons required by doom-modeline to look cool
+  (use-package nerd-icons)
+  (use-package doom-modeline
+    :ensure t
+    :hook (after-init . doom-modeline-mode))
+  
+#+END_SRC
+
+** Vertico
+
+The [[https://github.com/minad/vertico][vertico package]] provides a minibuffer replacement that I have configured to pop in the center of the screen. Which is Nice. There
+is a lot of configurability to the package, along with extension packages. Give the repository a look. I am just scratching the surface
+and my usecase is mainly for popping the buffer up in the center of the screen. Which is almost an after thought.
+
+#+begin_src emacs-lisp :tangle yes
+
+  ;; Enable vertico
+  (use-package vertico
+    :ensure t
+    :custom
+    ;; (vertico-scroll-margin 0) ;; Different scroll margin
+    (vertico-count 20) ;; Show more candidates
+    ;; (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
+    (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+    :init
+    (vertico-mode))
+
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
+  (use-package savehist
+    :init
+    (savehist-mode))
+
+  ;; A few more useful configurations...
+  (use-package emacs
+    :custom
+    ;; Support opening new minibuffers from inside existing minibuffers.
+    (enable-recursive-minibuffers t)
+    ;; Emacs 28 and newer: Hide commands in M-x which do not work in the current
+    ;; mode.  Vertico commands are hidden in normal buffers. This setting is
+    ;; useful beyond Vertico.
+    (read-extended-command-predicate #'command-completion-default-include-p)
+    :init
+    ;; Add prompt indicator to `completing-read-multiple'.
+    ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+    (defun crm-indicator (args)
+      (cons (format "[CRM%s] %s"
+		    (replace-regexp-in-string
+		     "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+		     crm-separator)
+		    (car args))
+	    (cdr args)))
+    (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+    ;; Do not allow the cursor in the minibuffer prompt
+    (setq minibuffer-prompt-properties
+	  '(read-only t cursor-intangible t face minibuffer-prompt))
+    (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
+
+#+end_src
+
+THe author recommends using the orderless package
+
+#+begin_src emacs-lisp :tangle yes
+
+  ;; Optionally use the `orderless' completion style.
+  (use-package orderless
+    :ensure t
+    :custom
+    ;; Configure a custom style dispatcher (see the Consult wiki)
+    ;; (orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch))
+    ;; (orderless-component-separator #'orderless-escapable-split-on-space)
+    (completion-styles '(orderless basic))
+    (completion-category-defaults nil)
+    (completion-category-overrides '((file (styles partial-completion)))))
+
+#+end_src
+
+** Vertico Postframe
+
+Along with vertico, we can add packages that cnage its behavior. This is one which is supposed to place
+the frame in the center of the screen
+
+#+begin_src emacs-lisp :tangle yes
+
+    ;;  (use-package vertico-multiform
+    ;;    :ensure nil
+    ;;    :hoot (after-init . vertico-multiform-mode)
+    ;;    :init
+    ;;    (setq vertico-multiform-commands
+    ;;	  '((consult-line (:not posframe))
+    ;;	    (gerb/consult-line (:not posframe))
+    ;;	    (consult-ag (:not posframe))
+    ;;	    (t posframe))))
+  
+      (use-package vertico-posframe
+	:ensure t
+	:custom
+	(vertico-posframe-parameters
+	 '((left-fringe . 8)
+	   (right-fringe . 8)))
+       )
+  (require 'vertico-posframe)
+  (vertico-posframe-mode 1)
+  
+#+end_src
+
+* More Org Mode Setup
+** Set Up Fonts
+
+To get this all to work, we need to install ETBembo font. I found [[https://github.com/DavidBarts/ET_Bembo][this repo]] , downloaded them installed them to
+
+*/usr/share/fonts/openfont/ETBembo*
+
+and ran *fc-cache -fv*
+
+#+begin_src emacs-lisp :tangle yes
+
+  (let* ((variable-tuple
+	  (cond ((x-list-fonts "ETBembo")         '(:font "ETBembo"))
+		((x-list-fonts "Source Sans Pro") '(:font "Source Sans Pro"))
+		((x-list-fonts "Lucida Grande")   '(:font "Lucida Grande"))
+		((x-list-fonts "Verdana")         '(:font "Verdana"))
+		((x-family-fonts "Sans Serif")    '(:family "Sans Serif"))
+		(nil (warn "Cannot find a Sans Serif Font.  Install Source Sans Pro."))))
+	 (base-font-color     (face-foreground 'default nil 'default))
+	 (headline           `(:inherit default :weight bold :foreground ,base-font-color)))
+
+    (custom-theme-set-faces
+     'user
+     `(org-level-8 ((t (,@headline ,@variable-tuple))))
+     `(org-level-7 ((t (,@headline ,@variable-tuple))))
+     `(org-level-6 ((t (,@headline ,@variable-tuple))))
+     `(org-level-5 ((t (,@headline ,@variable-tuple))))
+     `(org-level-4 ((t (,@headline ,@variable-tuple :height 1.1))))
+     `(org-level-3 ((t (,@headline ,@variable-tuple :height 1.25))))
+     `(org-level-2 ((t (,@headline ,@variable-tuple :height 1.5))))
+     `(org-level-1 ((t (,@headline ,@variable-tuple :height 1.75))))
+     `(org-document-title ((t (,@headline ,@variable-tuple :height 2.0 :underline nil))))))
+  
+  (custom-theme-set-faces
+   'user
+   '(variable-pitch ((t (:family "ETBembo" :height 180 :weight thin))))
+   '(fixed-pitch ((t ( :family "Fira Code Retina" :height 160)))))
+
+#+end_src
