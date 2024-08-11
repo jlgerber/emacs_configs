@@ -4,5 +4,8 @@ install:
 	cp config.org ~/.config/emacs/.
 	cd ~/.config/emacs
 
+get_updates:
+	cp ~/.config/emacs/config.org .
+
 install-tasks:
 	cp ./OrgFiles/Tasks.org ~/OrgFiles/.
